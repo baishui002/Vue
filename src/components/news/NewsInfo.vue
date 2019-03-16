@@ -33,7 +33,7 @@
         methods: {
             getNewsInfo() {
                 this.id = this.$route.params.id;
-                this.$http.get('getnew/' + this.id).then(data => {
+                this.$http.get('api/getnew/' + this.id).then(data => {
                     if (data.body.status === 0) {
                         this.newsinfo = data.body.message[0];
                         // console.log(data.body.message[0]);

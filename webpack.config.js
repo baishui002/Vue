@@ -25,7 +25,7 @@ module.exports = {
         rules: [
             {test: /\.css$/, use:  ['style-loader', 'css-loader']},
             {test: /\.less$/, use:  ['style-loader', 'css-loader','less-loader']},
-            {test: /\.(jpg|git|png|bmp|jpeg)$/, use: 'url-loader?limit=7631&name=[hash:8]-[name].[ext]'},
+            {test: /\.(jpg|gif|png|bmp|jpeg)$/, use: 'url-loader?limit=7631&name=[hash:8]-[name].[ext]'},
             {test: /\.(ttf|eot|svg|woff|woff2)$/, use: 'url-loader'},
             {test: /\.vue$/, use: 'vue-loader'},
             {test: /\.js$/, use: 'babel-loader', exclude:/node_modules/}

@@ -2,10 +2,10 @@
     <div class="comment-container">
         <h3>发表评论</h3>
         <hr>
-        <textarea placeholder="请输入要BB的内容（做多吐槽120字）"></textarea>
-        <mt-button type="primary" size="large">发表评论</mt-button>
+        <textarea placeholder="请输入要BB的内容（做多吐槽120字）" v-model="message"></textarea>
+        <mt-button type="primary" size="large"  @click="postCmt">发表评论</mt-button>
         <div class="cmt-list">
-            <div class="cmt-item" v-for="(item, index) in comment" :key="index">
+            <div class="cmt-item" v-for="(item, index) in comments" :key="index">
                 <div class="cmt-title">
                     第{{index+1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;发表时间：{{item.add_time | dateFormat}}
                 </div>
@@ -24,7 +24,8 @@
         data(){
             return {
                 pageindex: 1,
-                comment: []
+                comments: [],
+                message: ''
             }
         },
         created(){
@@ -32,10 +33,9 @@
         },
         methods: {
             getNewsComment() {
-                this.$http.get('getcomments/' + this.id + '?pageindex=' + this.pageindex).then(data => {
+                this.$http.get('api/getcomments/' + this.id + '?pageindex=' + this.pageindex).then(data => {
                     if (data.body.status === 0) {
-                        this.comment = this.comment.concat(data.body.message);
-                        // console.log(data.body);
+                        this.comments = this.comments.concat(data.body.message);
                     } else {
                         Toast("加载新闻评论失败...")
                     }
@@ -45,7 +45,30 @@
             getMore(){
                 this.pageindex ++;
                 this.getNewsComment();
+            },
+            postCmt(){
+                var content = this.message;
+                if (content.trim().length ===0 ){
+                    return Toast("评论不能为空....")
+                }
+
+                this.$http.post('postcomment/'+ this.id, {"content": content}).then(data => {
+                    if (data.body.status === 0 ){
+                        this.comments.unshift({
+                            "add_time": Date.now(),
+                            "user_name": "匿名用户",
+                            "content": content
+                        });
+                        this.message = '';
+                        Toast("提交成功");
+                        // this.getNewsComment()
+                    } else {
+                        Toast("提交失败")
+                    }
+
+                })
             }
+
         },
         props: ['id']
     }
@@ -59,9 +82,9 @@
             height: 0px;
         }
         textarea{
-            padding-top: 10px;
-            text-indent: 2em;
-            margin-top: 5px;
+            margin: 0;
+            font-size: 14px;
+            height: 85px;
         }
         .cmt-list {
             margin-top: 5px;

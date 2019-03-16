@@ -34,7 +34,7 @@
 
         methods: {
             getNewsList(){
-                this.$http.get('getnewslist').then(data => {
+                this.$http.get('api/getnewslist').then(data => {
                     if (data.body.status == 0) {
                         this.newsList = data.body.message;
                     } else {
